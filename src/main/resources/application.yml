@@ -1,0 +1,31 @@
+micronaut:
+    application:
+        name: cleverFridge
+    server:
+        port: 8080
+
+fridge:
+    sensor:
+        luminosity:
+            threshold: 600
+            minutes:
+                threshold: 0
+        temperature:
+            threshold: 16
+
+dweet:
+    url: https://dweet.io:443
+    thing:
+        name: cleverFridge
+
+ifttt:
+    url: https://maker.ifttt.com
+    key: someKey
+    email:
+        event: fridge_door_opened
+
+nexmo:
+    url: https://rest.nexmo.com
+    api:
+        key: someKey
+        secret: someSecret

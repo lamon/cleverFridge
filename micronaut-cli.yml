@@ -1,0 +1,5 @@
+profile: service
+defaultPackage: com.cleverfridge
+---
+testFramework: spock
+sourceLanguage: groovy
