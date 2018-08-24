@@ -1,7 +1,5 @@
 package com.cleverfridge.domain
 
-import io.micronaut.context.annotation.Value
-
 class NexmoSMS {
 
     String api_key

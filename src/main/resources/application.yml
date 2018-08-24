@@ -9,7 +9,7 @@ fridge:
         luminosity:
             threshold: 600
             minutes:
-                threshold: 0
+                threshold: 1
         temperature:
             threshold: 16
 
@@ -26,6 +26,9 @@ ifttt:
 
 nexmo:
     url: https://rest.nexmo.com
+    phone:
+        number:
+            to: 5511900000000
     api:
         key: someKey
         secret: someSecret

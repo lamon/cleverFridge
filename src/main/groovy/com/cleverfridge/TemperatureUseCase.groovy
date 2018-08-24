@@ -1,8 +1,7 @@
 package com.cleverfridge
 
-import com.cleverfridge.clients.DweetClient
+
 import com.cleverfridge.clients.IFTTTClient
-import com.cleverfridge.clients.NexmoClient
 import com.cleverfridge.domain.IFTTTValues
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j

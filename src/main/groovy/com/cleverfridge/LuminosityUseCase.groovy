@@ -24,6 +24,9 @@ class LuminosityUseCase {
     @Value('${nexmo.api.secret}')
     String api_secret
 
+    @Value('${nexmo.phone.number.to}')
+    String phoneNumberTo
+
     @Value('${fridge.sensor.luminosity.threshold}')
     int luminosityThreshold
 
@@ -117,7 +120,7 @@ class LuminosityUseCase {
     private void sendSMS() {
         def nexmoSMS = new NexmoSMS(api_key: api_key,
                                     api_secret: api_secret,
-                                    to: "somePhoneNumber",
+                                    to: phoneNumberTo,
                                     from: "Clever Fridge",
                                     text: "A porta da geladeira está aberta por muito tempo!")
 

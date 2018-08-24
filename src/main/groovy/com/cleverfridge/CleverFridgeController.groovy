@@ -1,7 +1,7 @@
 package com.cleverfridge
 
-import com.cleverfridge.domain.FridgeSensor
 import com.cleverfridge.clients.DweetClient
+import com.cleverfridge.domain.FridgeSensor
 import groovy.util.logging.Slf4j
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.Body

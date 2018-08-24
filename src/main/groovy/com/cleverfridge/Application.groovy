@@ -1,8 +1,8 @@
 package com.cleverfridge
 
+import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import io.micronaut.runtime.Micronaut
-import groovy.transform.CompileStatic
 
 import javax.inject.Singleton
 
