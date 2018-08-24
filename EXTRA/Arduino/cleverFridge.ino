@@ -45,7 +45,7 @@ void setup()
 
   status = esp8266.begin();
   if (status <= 0) {
-    Serial.println(F("Unable to communicate with shield. Looping"));
+    Serial.println(F("Não foi possível comunicar com o shield wifi. Looping"));
     while(1);
   }
 
@@ -57,10 +57,10 @@ void setup()
     }
   }
 
-  Serial.print(F("My IP address is: "));
+  Serial.print(F("IP address: "));
   Serial.println(esp8266.localIP());
 
-  Serial.println(F("Press any key to post to Dweet!"));
+  Serial.println(F("Pressione qualquer tecla para iniciar ..."));
 
 }
 
@@ -76,13 +76,12 @@ void postToGateway() {
 
   // temperatura ----------------------------------
   sensors.requestTemperatures();
-  float tempC = sensors.getTempC(temperatureSensor1);
+  float temperature = sensors.getTempC(temperatureSensor1);
 
   Serial.println("Temp C:");
-  Serial.println(tempC);
+  Serial.println(temperature);
   // --------------------------------------------
 
-  // Create a client, and initiate a connection
   ESP8266Client client;
 
   Serial.println("Clever Fridge Gateway: " + cleverFridgeGateway);
@@ -95,14 +94,14 @@ void postToGateway() {
   float humidity = analogRead(humidityAnalogInPin);
   float luminosity = analogRead(luminosityAnalogInPin);
 
-  // Set up our Dweet post parameters:
   String params;
-  params += "temperature=" + String(tempC) + "&";
+  params += "temperature=" + String(temperature) + "&";
   params += "humidity=" + String(humidity) + "&";
   params += "luminosity=" + String(luminosity);
 
-  String request = "POST /cleverFridge";
+  String request = "POST /cleverFridge?" + params;
   Serial.println("REQUEST: " + request);
+
   client.println(request);
   client.println("Host: http://"+ cleverFridgeGateway);
   client.println("Connection: close");
