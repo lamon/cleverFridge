@@ -1,11 +1,12 @@
+#include <Adafruit_NeoPixel.h>
 #include <SoftwareSerial.h>
 #include <SparkFunESP8266WiFi.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
-// wifi ------------------------------
-const char mySSID[] = "WLL-Inatel";
-const char myPSK[] = "inatelsemfio";
+// wifi ------------------------------------
+const char mySSID[] = "someSSID";
+const char myPSK[] = "somePassword";
 // ------------------------------------------
 
 // temperatura ------------------------------
@@ -17,10 +18,16 @@ DeviceAddress temperatureSensor1;
 
 // umidade --------------------------------
 #define humidityAnalogInPin A0
-// -----------------------------------------
+// ----------------------------------------
 
-// luminosidade -----------------------------------
+// luminosidade ---------------------------------
 const int luminosityAnalogInPin = A2;
+// ----------------------------------------------
+
+// leds wearable ---------------------------------
+#define PIN 5
+#define PIXELS 5
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(PIXELS, PIN, NEO_GRB + NEO_KHZ800);
 // ----------------------------------------------
 
 // gateway --------------------------------
@@ -31,6 +38,11 @@ void setup()
 {
   int status;
   Serial.begin(9600);
+
+  // leds off
+  strip.begin();
+  strip.show(); // all pixels to off
+  // -----
 
   sensors.begin();
 
@@ -72,6 +84,16 @@ void loop() {
 
 }
 
+void colorWipe(uint32_t c, uint8_t wait) {
+
+  for (uint16_t i = 0; i < strip.numPixels(); i++) {
+    strip.setPixelColor(i, c);
+    strip.show();
+    delay(wait);
+  }
+
+}
+
 void postToGateway() {
 
   // temperatura ----------------------------------
@@ -88,11 +110,17 @@ void postToGateway() {
   Serial.println(humidity);
   // --------------------------------------------
 
-  // luminosidade ----------------------------------
+  // luminosidade e leds -----------------------------
   float luminosity = analogRead(luminosityAnalogInPin);
 
   Serial.println("Luminosidade:");
   Serial.println(luminosity);
+
+  // se a luminosidade aumentar, porta abriu, acende LED
+  if (luminosity >= 600) {
+    colorWipe(strip.Color(255, 0, 0), 500); // RED
+    delay(1000);
+  }
   // --------------------------------------------
 
   ESP8266Client client;
