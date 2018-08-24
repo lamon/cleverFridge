@@ -4,8 +4,8 @@
 #include <DallasTemperature.h>
 
 // wifi ------------------------------
-const char mySSID[] = "someSSID";
-const char myPSK[] = "somePassword";
+const char mySSID[] = "WLL-Inatel";
+const char myPSK[] = "inatelsemfio";
 // ------------------------------------------
 
 // temperatura ------------------------------
@@ -82,6 +82,9 @@ void postToGateway() {
   Serial.println(temperature);
   // --------------------------------------------
 
+  float humidity = analogRead(humidityAnalogInPin);
+  float luminosity = analogRead(luminosityAnalogInPin);
+
   ESP8266Client client;
 
   Serial.println("Clever Fridge Gateway: " + cleverFridgeGateway);
@@ -91,9 +94,7 @@ void postToGateway() {
   }
   Serial.println(F("Connected."));
 
-  float humidity = analogRead(humidityAnalogInPin);
-  float luminosity = analogRead(luminosityAnalogInPin);
-
+  /*
   String params;
   params += "temperature=" + String(temperature) + "&";
   params += "humidity=" + String(humidity) + "&";
@@ -101,11 +102,23 @@ void postToGateway() {
 
   String request = "POST /cleverFridge?" + params;
   Serial.println("REQUEST: " + request);
+  */
 
+  client.println("POST /cleverFridge HTTP/1.1");
+  client.println("Host: 192.168.2.15:8080");
+  client.println("Content-Type: application/json");
+  client.println("Cache-Control: no-cache");
+  client.println();
+  client.println("{\"temperature\":\"4\",\"humidity\":\"100\",\"luminosity\":\"700\"}");
+  client.println("Connection: close");
+  client.println();
+
+  /*
   client.println(request);
   client.println("Host: http://"+ cleverFridgeGateway);
   client.println("Connection: close");
   client.println();
+  */
 
   Serial.println(F("Reading answer..."));
   while (client.available()) {
