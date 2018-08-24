@@ -78,12 +78,22 @@ void postToGateway() {
   sensors.requestTemperatures();
   float temperature = sensors.getTempC(temperatureSensor1);
 
-  Serial.println("Temp C:");
+  Serial.println("Temperatura C:");
   Serial.println(temperature);
   // --------------------------------------------
 
+  // umidade ----------------------------------
   float humidity = analogRead(humidityAnalogInPin);
+  Serial.println("Umidade:");
+  Serial.println(humidity);
+  // --------------------------------------------
+
+  // luminosidade ----------------------------------
   float luminosity = analogRead(luminosityAnalogInPin);
+
+  Serial.println("Luminosidade:");
+  Serial.println(luminosity);
+  // --------------------------------------------
 
   ESP8266Client client;
 
