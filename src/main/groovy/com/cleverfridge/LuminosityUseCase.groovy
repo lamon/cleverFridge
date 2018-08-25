@@ -28,19 +28,19 @@ class LuminosityUseCase {
     String phoneNumberTo
 
     @Value('${fridge.sensor.luminosity.threshold}')
-    int luminosityThreshold
+    Long luminosityThreshold
 
     @Value('${fridge.sensor.luminosity.minutes.threshold}')
-    int luminosityMinutesThreshold
+    Long luminosityMinutesThreshold
 
-    int currentLuminosity
+    Long currentLuminosity
     Date currentLuminosityDate
 
-    int lastLuminosity
+    Long lastLuminosity
     Date lastLuminosityDate
 
     Date fridgeDoorOpeningDate
-    int doorOpenedCount = 0
+    Long doorOpenedCount = 0
 
     final DweetClient dweetClient
     final NexmoClient nexmoClient
@@ -53,7 +53,7 @@ class LuminosityUseCase {
     @CompileDynamic
     void handleLuminosity(String luminosity) {
 
-        currentLuminosity = luminosity as int
+        currentLuminosity = Long.valueOf(luminosity)
         currentLuminosityDate = new Date()
 
         if (lastLuminosity && lastLuminosityDate) {

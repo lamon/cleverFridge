@@ -16,9 +16,9 @@ import java.text.SimpleDateFormat
 class TemperatureUseCase {
 
     @Value('${fridge.sensor.temperature.threshold}')
-    protected int temperatureThreshold
+    protected Long temperatureThreshold
 
-    int currentTemperature
+    Long currentTemperature
     Date currentTemperatureDate
 
     final IFTTTClient iftttClient
@@ -29,7 +29,7 @@ class TemperatureUseCase {
 
     void handleTemperature(String temperature) {
 
-        currentTemperature = temperature as int
+        currentTemperature = Long.valueOf(temperature)
         currentTemperatureDate = new Date()
 
         log.info("currentTemperature: {}, currentTemperatureDate: {}",

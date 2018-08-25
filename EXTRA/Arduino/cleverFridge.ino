@@ -5,8 +5,8 @@
 #include <DallasTemperature.h>
 
 // wifi ------------------------------------
-const char mySSID[] = "someSSID";
-const char myPSK[] = "somePassword";
+const char mySSID[] = "WLL-Inatel";
+const char myPSK[] = "inatelsemfio";
 // ------------------------------------------
 
 // temperatura ------------------------------
@@ -31,7 +31,7 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(PIXELS, PIN, NEO_GRB + NEO_KHZ800);
 // ----------------------------------------------
 
 // gateway --------------------------------
-const String cleverFridgeGateway = "192.168.2.15:8080";
+const String cleverFridgeGateway = "10.10.1.13";
 // ----------------------------------------------
 
 void setup()
@@ -82,6 +82,8 @@ void loop() {
       postToGateway();
   }
 
+  delay(5000);
+
 }
 
 void colorWipe(uint32_t c, uint8_t wait) {
@@ -99,6 +101,7 @@ void postToGateway() {
   // temperatura ----------------------------------
   sensors.requestTemperatures();
   float temperature = sensors.getTempC(temperatureSensor1);
+  int tempAsInt = (int) temperature;
 
   Serial.println("Temperatura C:");
   Serial.println(temperature);
@@ -106,12 +109,15 @@ void postToGateway() {
 
   // umidade ----------------------------------
   float humidity = analogRead(humidityAnalogInPin);
+  int humidityAsInt = (int) humidity;
+
   Serial.println("Umidade:");
   Serial.println(humidity);
   // --------------------------------------------
 
   // luminosidade e leds -----------------------------
   float luminosity = analogRead(luminosityAnalogInPin);
+  int luminosityAsInt = (int) luminosity;
 
   Serial.println("Luminosidade:");
   Serial.println(luminosity);
@@ -120,43 +126,33 @@ void postToGateway() {
   if (luminosity >= 600) {
     colorWipe(strip.Color(255, 0, 0), 500); // RED
     delay(1000);
+  } else {
+    colorWipe(strip.Color(0, 0, 255), 500); // BLUE
+    delay(1000);
   }
   // --------------------------------------------
 
   ESP8266Client client;
 
   Serial.println("Clever Fridge Gateway: " + cleverFridgeGateway);
-  if (client.connect(cleverFridgeGateway, 80) <= 0) {
+  if (client.connect(cleverFridgeGateway, 8080) <= 0) {
     Serial.println(F("Failed to connect to server."));
     return;
   }
   Serial.println(F("Connected."));
 
-  /*
-  String params;
-  params += "temperature=" + String(temperature) + "&";
-  params += "humidity=" + String(humidity) + "&";
-  params += "luminosity=" + String(luminosity);
-
-  String request = "POST /cleverFridge?" + params;
-  Serial.println("REQUEST: " + request);
-  */
+  String postData = "{\"temperature\":\"" + String(tempAsInt) + "\",\"humidity\":\"" + String(humidityAsInt) + "\",\"luminosity\":\"" + String(luminosityAsInt) + "\"}";
 
   client.println("POST /cleverFridge HTTP/1.1");
-  client.println("Host: 192.168.2.15:8080");
+  client.println("Host: http://10.10.1.13:8080");
   client.println("Content-Type: application/json");
   client.println("Cache-Control: no-cache");
-  client.println();
-  client.println("{\"temperature\":\"4\",\"humidity\":\"100\",\"luminosity\":\"700\"}");
   client.println("Connection: close");
+  client.print("Content-Length: ");
+  //client.println(strlen(postData));
+  client.println(postData.length());
   client.println();
-
-  /*
-  client.println(request);
-  client.println("Host: http://"+ cleverFridgeGateway);
-  client.println("Connection: close");
-  client.println();
-  */
+  client.println(postData);
 
   Serial.println(F("Reading answer..."));
   while (client.available()) {

@@ -26,7 +26,9 @@ class CleverFridgeController {
 
     @Post('/')
     HttpResponse save(@Body FridgeSensor fridgeSensor) {
+        //HttpResponse save(@QueryValue String temperature, @QueryValue String humidity, @QueryValue String luminosity) {
 
+        //def fridgeSensor = new FridgeSensor([temperature: temperature, humidity: humidity, luminosity: luminosity])
         createDweet(fridgeSensor)
 
         luminosityUseCase.handleLuminosity(fridgeSensor.luminosity)
